@@ -35,7 +35,7 @@ assert_ne!(pattern, pattern2);
 assert!(pattern > pattern2);
 ```
 
-We are also able combine all of this using Iterators
+We are also able combine all of this using Iterators.
 Here we'll retrieve the most specific pattern matching our candidate string
 ```rust
 // we use this because fold_first is behind this flag and on nightly only
