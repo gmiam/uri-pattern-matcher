@@ -6,7 +6,7 @@
 //!
 //! # Example
 //!
-//! Here is examples for the obvious usages of this crate:
+//! Here are examples for the common usages of this crate:
 //!
 //! ```rust
 //! # use uri_pattern_matcher::UriPattern;
