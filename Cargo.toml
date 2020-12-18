@@ -7,7 +7,7 @@ readme = "README.md"
 repository = "https://github.com/gmiam/uri-pattern-matcher.git"
 documentation = "https://docs.rs/uri-pattern-matcher"
 description = """
-Random number generators and other randomness functionality.
+URI (or path) pattern matching
 """
 keywords = ["URI", "pattern", "matching"]
 edition = "2018"
