@@ -24,7 +24,7 @@
 //! ```
 //!
 //! We are also able combine all of this using Iterators.
-//! Here we'll retrieve the most specific pattern matching our candidate string
+//! Here we'll retrieve the most specific pattern matching our candidate string:
 //! ```rust
 //! // we use this because fold_first is behind this flag and on nightly only
 //! #![feature(iterator_fold_self)]
@@ -38,7 +38,7 @@
 //! let best_match = patterns.iter()
 //!            .filter(|p| p.is_match(candidate))
 //!            .fold_first(|a, b| {
-//!            if a >= b { a } else { b }
+//!                if a >= b { a } else { b }
 //!            });
 //! assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"))
 //! ```

@@ -21,14 +21,12 @@ uri-pattern-matcher = "0.1"
 Here are examples for the common usages of this crate:
 
 ```rust
-# use uri_pattern_matcher::UriPattern;
 let pattern: UriPattern = "/api/{resource}/{id}/details".into();
 assert!(pattern.is_match("/api/resource/id1/details"));
 assert!(pattern.is_match("/api/customer/John/details"));
 ```
 
 ```rust
-# use uri_pattern_matcher::UriPattern;
 let pattern: UriPattern = "/api/{foo}/{bar}/zzz".into();
 let pattern2: UriPattern = "/api/{foo}/bar/{zzz}".into();
 assert_ne!(pattern, pattern2);
@@ -36,11 +34,10 @@ assert!(pattern > pattern2);
 ```
 
 We are also able combine all of this using Iterators.
-Here we'll retrieve the most specific pattern matching our candidate string
+Here we'll retrieve the most specific pattern matching our candidate string:
 ```rust
 // we use this because fold_first is behind this flag and on nightly only
 #![feature(iterator_fold_self)]
-# use uri_pattern_matcher::UriPattern;
 let patterns: Vec<UriPattern> = vec![
     "/api/{foo}/{bar}/zzz".into(),
     "/api/{foo}/bar/{zzz}".into(),
@@ -50,9 +47,9 @@ let candidate = "/api/resource/bar/zzz";
 let best_match = patterns.iter()
            .filter(|p| p.is_match(candidate))
            .fold_first(|a, b| {
-           if a >= b { a } else { b }
+               if a >= b { a } else { b }
            });
-assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"))
+assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"));
 ```
 
 # License
