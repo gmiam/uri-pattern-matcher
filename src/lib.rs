@@ -2,7 +2,7 @@
 //! Once the pattern is parsed, you can check if any string matches against it. You can also compare two patterns to find the more specific.
 //!
 //! For now it doesn't handle any other pattern than {pattern}. Feel free to open an issue if you have a need for a specific usecase.
-//! Can probably be used for paths on filesystems as well if One can find a usecase for this.
+//! Can probably be used for paths on filesystems as well if one can find a usecase for this.
 //!
 //! # Example
 //!
@@ -26,24 +26,20 @@
 //! We are also able combine all of this using Iterators.
 //! Here we'll retrieve the most specific pattern matching our candidate string:
 //! ```rust
-//! // we use this because fold_first is behind this flag and on nightly only
-//! #![feature(iterator_fold_self)]
 //! # use uri_pattern_matcher::UriPattern;
 //! let patterns: Vec<UriPattern> = vec![
-//!     "/api/{foo}/{bar}/zzz".into(),
 //!     "/api/{foo}/bar/{zzz}".into(),
+//!     "/api/{foo}/{bar}/zzz".into(),
 //!     "/{api}/{foo}/foo/{zzz}".into()
 //!     ];
 //! let candidate = "/api/resource/bar/zzz";
 //! let best_match = patterns.iter()
 //!            .filter(|p| p.is_match(candidate))
-//!            .fold_first(|a, b| {
-//!                if a >= b { a } else { b }
-//!            });
-//! assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"))
+//!            .max();
+//! assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"));
 //! ```
-mod pattern_part;
 mod uri_pattern_score;
+mod pattern_part;
 
 use core::cmp::Ordering;
 use crate::pattern_part::PatternPart;
@@ -102,6 +98,17 @@ impl PartialOrd for UriPattern<'_> {
     }
 }
 
+impl Ord for UriPattern<'_> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let score: UriPatternScore = self.into();
+        let other_score: UriPatternScore = other.into();
+        score.cmp(&other_score)
+    }
+}
+
+impl Eq for UriPattern<'_> {}
+
+
 
 #[cfg(test)]
 mod tests {
@@ -132,5 +139,19 @@ mod tests {
         let pattern: UriPattern = "/a/{b}/{c}/d".into();
         let pattern2: UriPattern = "/a/{b}/c/{d}".into();
         assert!(pattern > pattern2);
+    }
+
+    #[test]
+    fn best_match_with_ord() {
+        let patterns: Vec<UriPattern> = vec![
+            "/api/{foo}/bar/{zzz}".into(),
+            "/api/{foo}/{bar}/zzz".into(),
+            "/{api}/{foo}/foo/{zzz}".into()
+        ];
+        let candidate = "/api/resource/bar/zzz";
+        let best_match = patterns.iter()
+            .filter(|p| p.is_match(candidate))
+            .max();
+        assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"));
     }
 }

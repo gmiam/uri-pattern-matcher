@@ -1,6 +1,6 @@
 use crate::UriPattern;
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd, Ord, Eq)]
 pub(crate) struct UriPatternScore {
     score: usize,
 }
