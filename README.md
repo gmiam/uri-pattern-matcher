@@ -33,11 +33,9 @@ assert_ne!(pattern, pattern2);
 assert!(pattern > pattern2);
 ```
 
-We are also able combine all of this using Iterators.
+We are also able to combine all of this using Iterators.
 Here we'll retrieve the most specific pattern matching our candidate string:
 ```rust
-// we use this because fold_first is behind this flag and on nightly only
-#![feature(iterator_fold_self)]
 let patterns: Vec<UriPattern> = vec![
     "/api/{foo}/{bar}/zzz".into(),
     "/api/{foo}/bar/{zzz}".into(),
@@ -46,9 +44,7 @@ let patterns: Vec<UriPattern> = vec![
 let candidate = "/api/resource/bar/zzz";
 let best_match = patterns.iter()
            .filter(|p| p.is_match(candidate))
-           .fold_first(|a, b| {
-               if a >= b { a } else { b }
-           });
+           .max();
 assert_eq!(best_match.unwrap(), &UriPattern::from("/api/{foo}/{bar}/zzz"));
 ```
 
